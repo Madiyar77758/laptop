@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>LaptopCheck</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+/*
+  Страница продажи LaptopCheck.
+
+  Тема одна и намеренно та же, что у самой программы: шалфейная стена,
+  кремовые карточки, фиалковый акцент. Человек, купивший после этой
+  страницы, должен узнать продукт в первую секунду, а не гадать, то ли
+  он скачал.
+
+  Герой — не рассказ о программе, а её ответ: настоящее заключение по
+  настоящему ноутбуку с настоящими измерениями. Ничего убедительнее
+  показать нельзя.
+*/
+:root {
+  --wall:    #A0B7A4;
+  --wall-2:  #8FA894;
+  --cream:   #FBF9F4;
+  --glass:   rgba(251,249,244,.9);
+  --ink:     #1C2620;
+  --muted:   #4C5850;
+  --faint:   #7C8981;
+  --on-wall: #2A362E;
+  --rule:    rgba(28,38,32,.13);
+  --accent:  #6B4A9E;
+  --accent-2:#8A5FBE;
+  --ok:      #20734B;
+  --warn:    #A07800;
+  --bad:     #BE2D3E;
+  --lift: 0 26px 60px -28px rgba(24,38,28,.5), 0 8px 20px -12px rgba(24,38,28,.22);
+}
+
+* { box-sizing: border-box; }
+html { background: var(--wall); }
+body {
+  margin: 0; background: var(--wall); color: var(--ink);
+  font-family: "Segoe UI Variable Text", "Segoe UI", system-ui,
+               -apple-system, "Helvetica Neue", sans-serif;
+  font-size: 17px; line-height: 1.6; -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+body::before {
+  content: ""; position: fixed; inset: -25vh -20vw; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(44vw 38vw at 14% 2%,  rgba(206,219,203,.85) 0%, transparent 64%),
+    radial-gradient(40vw 34vw at 86% 8%,  rgba(226,216,196,.6) 0%, transparent 66%),
+    radial-gradient(46vw 38vw at 74% 52%, rgba(126,152,132,.5) 0%, transparent 68%),
+    radial-gradient(38vw 32vw at 22% 62%, rgba(150,175,155,.48) 0%, transparent 66%);
+  filter: blur(72px);
+}
+.mono { font-family: ui-monospace, "Cascadia Mono", "SF Mono", Menlo,
+                     Consolas, monospace; font-variant-numeric: tabular-nums; }
+
+.page { position: relative; z-index: 1; max-width: 960px; margin: 0 auto;
+        padding: 68px 26px 96px; display: flex; flex-direction: column; gap: 78px; }
+
+/* ---------------------------------------------------------- герой */
+
+.hero { display: flex; flex-direction: column; gap: 34px; }
+.eyebrow {
+  font-size: 12px; letter-spacing: .26em; text-transform: uppercase;
+  font-weight: 800; color: var(--on-wall);
+}
+h1 {
+  margin: 0; font-size: clamp(38px, 7vw, 74px); line-height: .96;
+  letter-spacing: -.045em; font-weight: 800; text-wrap: balance;
+  max-width: 16ch;
+  background: linear-gradient(166deg, #17211B 0%, #2C3A31 48%, #6B4A9E 100%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+  padding-bottom: .06em;
+}
+.sub { margin: 0; max-width: 54ch; font-size: 19px; color: var(--on-wall); }
+.sub b { font-weight: 700; color: var(--ink); }
+
+/* ---------------------------------------------------------- карточка-образец */
+
+.demo {
+  background: var(--glass); border: 1px solid rgba(255,255,255,.8);
+  border-radius: 22px; padding: 30px 32px;
+  box-shadow: var(--lift), inset 0 1px 0 rgba(255,255,255,.85);
+  display: flex; flex-direction: column; gap: 22px;
+}
+.demo-tag {
+  font-size: 10.5px; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--faint); font-weight: 800;
+}
+.demo-device { display: flex; flex-direction: column; gap: 10px; }
+.demo-device h2 { margin: 0; font-size: clamp(22px, 3.4vw, 30px);
+                  letter-spacing: -.03em; font-weight: 800; }
+.chips { display: flex; flex-wrap: wrap; gap: 7px; font-size: 12px; }
+.chips span { background: rgba(28,38,32,.05); border: 1px solid var(--rule);
+              border-radius: 999px; padding: 4px 12px; color: var(--muted); }
+
+.two { display: grid; grid-template-columns: 5fr 7fr; gap: 20px; }
+@media (max-width: 720px) { .two { grid-template-columns: 1fr; } }
+.box { background: var(--cream); border: 1px solid var(--rule);
+       border-radius: 16px; padding: 20px 22px;
+       display: flex; flex-direction: column; gap: 12px; }
+.box.hi { border-color: rgba(107,74,158,.4);
+          box-shadow: 0 20px 44px -26px rgba(107,74,158,.6); }
+.box-label { font-size: 10.5px; letter-spacing: .2em; text-transform: uppercase;
+             color: var(--faint); font-weight: 800; }
+
+.score { display: flex; align-items: baseline; gap: 9px; }
+.score b { font-size: 58px; font-weight: 800; line-height: .82;
+           letter-spacing: -.05em; color: var(--warn); }
+.score .of { font-size: 15px; color: var(--faint); }
+.score .word { margin-left: auto; font-size: 14px; font-weight: 700;
+               color: var(--warn); }
+.bar { display: flex; gap: 3px; height: 10px; }
+.bar i { flex: 1; border-radius: 3px; background: rgba(28,38,32,.11); }
+.bar i.on { background: var(--warn); }
+
+.price-out { font-size: clamp(30px, 4.4vw, 42px); font-weight: 800;
+             letter-spacing: -.045em; line-height: 1.05;
+             font-family: ui-monospace, Consolas, monospace;
+             font-variant-numeric: tabular-nums;
+             background: linear-gradient(150deg, #22301F 0%, #4A3A7E 44%, #6B4A9E 100%);
+             -webkit-background-clip: text; background-clip: text;
+             -webkit-text-fill-color: transparent; }
+.price-hint { font-size: 12.5px; color: var(--muted); }
+.tip { padding: 12px 15px; background: rgba(28,38,32,.05);
+       border-left: 3px solid var(--warn); border-radius: 0 10px 10px 0;
+       font-size: 14.5px; }
+.tip b { font-weight: 800; }
+
+.rows { border: 1px solid var(--rule); border-radius: 16px; overflow: hidden;
+        background: var(--cream); }
+.rw { display: grid; grid-template-columns: 3px 118px 1fr; gap: 0 16px;
+      align-items: baseline; padding: 13px 20px 13px 0;
+      border-bottom: 1px solid rgba(28,38,32,.07); font-size: 14.5px; }
+.rw:last-child { border-bottom: none; }
+.rw i { grid-column: 1; align-self: stretch; margin: -13px 0; }
+.rw .k { font-size: 10px; letter-spacing: .13em; text-transform: uppercase;
+         color: var(--faint); font-weight: 800; padding-top: 4px; }
+
+/* ---------------------------------------------------------- секции */
+
+section { display: flex; flex-direction: column; gap: 26px; }
+h3 { margin: 0; font-size: clamp(25px, 3.8vw, 34px); letter-spacing: -.032em;
+     font-weight: 800; max-width: 20ch; text-wrap: balance; }
+.lead { margin: 0; max-width: 58ch; font-size: 17px; color: var(--on-wall); }
+
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(258px, 1fr));
+         gap: 18px; }
+.c {
+  background: var(--glass); border: 1px solid rgba(255,255,255,.78);
+  border-radius: 18px; padding: 24px 26px;
+  box-shadow: var(--lift), inset 0 1px 0 rgba(255,255,255,.8);
+  display: flex; flex-direction: column; gap: 10px;
+}
+.c h4 { margin: 0; font-size: 17.5px; font-weight: 800; letter-spacing: -.018em; }
+.c p { margin: 0; font-size: 15px; color: var(--muted); }
+.c .num { font-size: 34px; font-weight: 800; letter-spacing: -.04em;
+          line-height: 1; color: var(--accent); }
+
+.honest { background: rgba(28,38,32,.055); border: 1px solid var(--rule);
+          border-radius: 18px; padding: 26px 28px;
+          display: flex; flex-direction: column; gap: 12px; }
+.honest h4 { margin: 0; font-size: 17px; font-weight: 800; }
+.honest ul { margin: 0; padding-left: 20px; display: flex; flex-direction: column;
+             gap: 8px; font-size: 15.5px; color: var(--muted); }
+
+/* ---------------------------------------------------------- покупка */
+
+.buy {
+  background: linear-gradient(158deg, #241C3A 0%, #2E2350 46%, #3B2A63 100%);
+  border-radius: 24px; padding: 40px 40px 36px; color: #F3F0FA;
+  box-shadow: 0 34px 74px -30px rgba(24,20,50,.75);
+  display: flex; flex-direction: column; gap: 24px;
+}
+.buy h3 { color: #fff; max-width: 18ch; }
+.buy .lead { color: rgba(243,240,250,.78); }
+.pricetag { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.pricetag b { font-size: clamp(46px, 8vw, 68px); font-weight: 800;
+              letter-spacing: -.05em; line-height: 1;
+              font-family: ui-monospace, Consolas, monospace; color: #fff; }
+.pricetag span { font-size: 16px; color: rgba(243,240,250,.7); }
+.steps { display: grid; gap: 12px; }
+.step { display: grid; grid-template-columns: 30px 1fr; gap: 14px;
+        align-items: start; font-size: 16px; color: rgba(243,240,250,.9); }
+.step em { font-style: normal; font-weight: 800; font-size: 13px;
+           width: 30px; height: 30px; border-radius: 50%;
+           background: rgba(255,255,255,.14); color: #fff;
+           display: grid; place-items: center;
+           font-family: ui-monospace, Consolas, monospace; }
+.step b { color: #fff; font-weight: 700; }
+.fill { background: rgba(255,255,255,.1); border: 1px dashed rgba(255,255,255,.42);
+        border-radius: 8px; padding: 2px 10px; font-size: 14px;
+        font-family: ui-monospace, Consolas, monospace; color: #EBD9A8; }
+
+footer { border-top: 1px solid rgba(28,38,32,.18); padding-top: 26px;
+         font-size: 14px; color: var(--on-wall); display: flex;
+         flex-direction: column; gap: 8px; max-width: 62ch; }
+
+@media (max-width: 560px) {
+  .page { padding: 44px 18px 70px; gap: 60px; }
+  .demo { padding: 22px 20px; }
+  .buy { padding: 30px 24px; }
+  .rw { grid-template-columns: 3px 1fr; gap: 0 14px; }
+  .rw .k, .rw .v { grid-column: 2; }
+  .rw .k { padding-top: 0; }
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <div class="hero">
+    <div class="eyebrow">Проверка перед покупкой</div>
+    <h1>Узнайте, что вам продают</h1>
+    <p class="sub">Программа читает состояние ноутбука прямо с железа и говорит,
+    <b>сколько он стоит на самом деле</b> — по ценам казахстанского рынка.
+    Пятнадцать минут на встрече вместо потерянных ста тысяч.</p>
+
+    <div class="demo">
+      <div class="demo-tag">Так выглядит заключение</div>
+
+      <div class="demo-device">
+        <h2>Acer Nitro ANV14-61</h2>
+        <div class="chips mono">
+          <span>AMD Ryzen 7 8845HS</span><span>32 ГБ ОЗУ</span>
+          <span>SSD 954 ГБ</span><span>RTX 4050</span><span>1920×1200</span>
+        </div>
+      </div>
+
+      <div class="two">
+        <div class="box">
+          <div class="box-label">Состояние</div>
+          <div class="score">
+            <b class="mono">84</b><span class="of mono">/100</span>
+            <span class="word">Есть вопросы</span>
+          </div>
+          <div class="bar">
+            <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i>
+            <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i>
+            <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i>
+            <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i>
+            <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i>
+            <i class="on"></i><i></i><i></i><i></i><i></i>
+          </div>
+        </div>
+
+        <div class="box hi">
+          <div class="box-label">Справедливая цена</div>
+          <div class="price-out">431 000 ₸</div>
+          <div class="price-hint">по 8 объявлениям: марка, процессор, память,
+          диск и видеокарта; минус 6% за состояние</div>
+          <div class="tip">Продавец просит <b>480 000 ₸</b> — дороже рынка
+          на <b>49 000 ₸</b>. Торгуйтесь.</div>
+        </div>
+      </div>
+
+      <div class="rows">
+        <div class="rw"><i style="background:var(--warn)"></i>
+          <div class="k">История</div>
+          <div class="v">Синих экранов: 5, последний 29 июня</div></div>
+        <div class="rw"><i style="background:var(--warn)"></i>
+          <div class="k">История</div>
+          <div class="v">Аварийных выключений: 21 — стоит проверить питание и перегрев</div></div>
+        <div class="rw"><i style="background:var(--ok)"></i>
+          <div class="k">Батарея</div>
+          <div class="v">Износ 12.9% — отличное состояние</div></div>
+        <div class="rw"><i style="background:var(--ok)"></i>
+          <div class="k">Диск</div>
+          <div class="v">Износ ячеек 0%, ресурс в порядке</div></div>
+        <div class="rw"><i style="background:var(--ok)"></i>
+          <div class="k">Сверка</div>
+          <div class="v">Узлы согласуются между собой — следов замены не видно</div></div>
+      </div>
+    </div>
+  </div>
+
+  <section>
+    <h3>Что она находит, а вы — нет</h3>
+    <p class="lead">Продавец покажет вам работающий экран и скажет «всё отлично».
+    Программа смотрит туда, куда посмотреть нельзя.</p>
+
+    <div class="cards">
+      <div class="c">
+        <div class="num mono">180</div>
+        <h4>Дней истории</h4>
+        <p>Windows помнит ошибки диска, аппаратные сбои и синие экраны за полгода.
+        Если продавец не переустанавливал систему — всё видно насквозь.</p>
+      </div>
+      <div class="c">
+        <h4>Следы замены узлов</h4>
+        <p>Матрица 2023 года в корпусе 2019-го — экран меняли. Диск с наработкой
+        больше возраста ноутбука — его переставили с другой машины. Отдельные
+        факты молчат, сопоставление говорит.</p>
+      </div>
+      <div class="c">
+        <h4>Износ, а не «работает»</h4>
+        <p>Батарея держит 68% от заводской ёмкости. SSD выработал треть ресурса.
+        Под нагрузкой процессор режет частоту вдвое. Ничего из этого не видно,
+        пока ноутбук просто включён.</p>
+      </div>
+      <div class="c">
+        <h4>То, что видит только глаз</h4>
+        <p>Битые пиксели, залипающие клавиши, хрип в динамиках, люфт петель.
+        Семь проверок, которые программа проводит вашими руками и глазами —
+        и засчитывает в оценку.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h3>Цена — не на глаз</h3>
+    <p class="lead">Внутри программы лежит база: <b>12 458 объявлений</b> о продаже
+    б/у ноутбуков с OLX.kz, сжатых в таблицу «конфигурация → реальная цена».
+    Она подбирает объявления, максимально похожие на проверяемый ноутбук —
+    по марке, процессору, памяти, диску и видеокарте — и показывает, где
+    проходит середина рынка.</p>
+
+    <div class="honest">
+      <h4>Чего она не делает</h4>
+      <ul>
+        <li>Не заглядывает внутрь корпуса — вздутую батарею и следы залития
+        видит только мастер с отвёрткой.</li>
+        <li>Не читает температуру там, где производитель её закрыл. Если датчик
+        недоступен, программа пишет «не проверено», а не выдумывает число.</li>
+        <li>Не называет цену, если похожих объявлений слишком мало. Лучше
+        промолчать, чем соврать в сумме, с которой вы пойдёте торговаться.</li>
+        <li>Оценка построена на ценах запроса, а не на суммах состоявшихся
+        сделок. Реальная сделка обычно ниже.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="buy">
+    <h3>Сколько стоит</h3>
+    <div class="pricetag">
+      <b>2 000 ₸</b>
+      <span>один раз, навсегда · обновления бесплатно</span>
+    </div>
+    <p class="lead">Полтора процента от цены ноутбука. Одна найденная посаженная
+    батарея окупает программу в двадцать пять раз.</p>
+
+    <div class="steps">
+      <div class="step"><em>1</em>
+        <div>Переведите <b>2 000 ₸</b> на Kaspi
+        <span class="fill">номер вписать</span></div></div>
+      <div class="step"><em>2</em>
+        <div>Напишите в WhatsApp <span class="fill">номер вписать</span> —
+        пришлите чек</div></div>
+      <div class="step"><em>3</em>
+        <div>В ответ придёт ссылка на архив, <b>51 КБ</b>. Распаковали,
+        запустили — работает. Ничего не устанавливается.</div></div>
+    </div>
+  </section>
+
+  <footer>
+    <div>Программа работает на Windows 10 и 11. Интернет не нужен: база цен
+    лежит внутри архива.</div>
+    <div>Цены собраны с OLX.kz. Свежую версию базы получают все, кто купил —
+    достаточно написать.</div>
+  </footer>
+
+</div>
+
+</body>
+</html>
