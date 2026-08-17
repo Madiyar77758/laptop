@@ -191,6 +191,22 @@ h3 { margin: 0; font-size: clamp(25px, 3.8vw, 34px); letter-spacing: -.032em;
            display: grid; place-items: center;
            font-family: ui-monospace, Consolas, monospace; }
 .step b { color: #fff; font-weight: 700; }
+/* Номер — то, ради чего человек досюда дочитал: он должен быть виден
+   и его должно быть удобно нажать с телефона. */
+.num-hi { color: #FFE9A8; font-weight: 800; letter-spacing: -.01em;
+          white-space: nowrap; }
+.wa {
+  display: inline-flex; align-items: center; gap: 9px;
+  margin-top: 6px; padding: 9px 18px 9px 15px;
+  background: #25D366; color: #08281A; text-decoration: none;
+  border-radius: 999px; font-weight: 800; font-size: 15px;
+  box-shadow: 0 10px 24px -12px rgba(37,211,102,.9);
+  transition: transform .14s, box-shadow .14s;
+}
+.wa:hover { transform: translateY(-1px);
+            box-shadow: 0 14px 28px -12px rgba(37,211,102,1); }
+.wa:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+.wa-ico { font-size: 17px; }
 .fill { background: rgba(255,255,255,.1); border: 1px dashed rgba(255,255,255,.42);
         border-radius: 8px; padding: 2px 10px; font-size: 14px;
         font-family: ui-monospace, Consolas, monospace; color: #EBD9A8; }
@@ -345,11 +361,13 @@ footer { border-top: 1px solid rgba(28,38,32,.18); padding-top: 26px;
 
     <div class="steps">
       <div class="step"><em>1</em>
-        <div>Переведите <b>2 000 ₸</b> на Kaspi
-        <span class="fill">номер вписать</span></div></div>
+        <div>Переведите <b>2 000 ₸</b> на Kaspi по номеру
+        <b class="num-hi mono">+7 747 875 00 29</b></div></div>
       <div class="step"><em>2</em>
-        <div>Напишите в WhatsApp <span class="fill">номер вписать</span> —
-        пришлите чек</div></div>
+        <div>Пришлите чек в WhatsApp:
+        <a class="wa" href="https://wa.me/77478750029" target="_blank" rel="noopener">
+        <span class="wa-ico" aria-hidden="true">✆</span>
+        <span class="mono">+7 747 875 00 29</span></a></div></div>
       <div class="step"><em>3</em>
         <div>В ответ придёт ссылка на архив, <b>51 КБ</b>. Распаковали,
         запустили — работает. Ничего не устанавливается.</div></div>
